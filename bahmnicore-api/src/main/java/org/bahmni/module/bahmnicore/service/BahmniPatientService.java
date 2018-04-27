@@ -17,7 +17,7 @@ public interface BahmniPatientService {
 
     List<PatientResponse> luceneSearch(PatientSearchParameters searchParameters);
 
-    List<PatientResponse> searchSimilarPatients(PatientSearchParameters searchParameters, PatientResponseMapper patientResponseMapper);
+    List<PatientResponse> searchSimilarPatients(PatientSearchParameters searchParameters);
 
     public List<Patient> get(String partialIdentifier, boolean shouldMatchExactPatientId);
 

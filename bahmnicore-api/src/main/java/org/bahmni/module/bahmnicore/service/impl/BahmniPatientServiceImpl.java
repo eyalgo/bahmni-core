@@ -90,20 +90,22 @@ public class BahmniPatientServiceImpl implements BahmniPatientService {
     }
 
     @Override
-    public List<PatientResponse> searchSimilarPatients(PatientSearchParameters searchParameters, PatientResponseMapper patientResponseMapper) {
-        List<PatientResponse> patients = new ArrayList<PatientResponse>();
-        Set<Person> persons = personService.getSimilarPeople(searchParameters.getName(), null, searchParameters.getGender());
-        for (Person person : persons) {
-            Patient patient = new Patient(person);
-            PatientResponse patientResponse = patientResponseMapper.map(
-                                                patient,
-                                                searchParameters.getLoginLocationUuid(),
-                                                searchParameters.getPatientSearchResultFields(),
-                                                searchParameters.getAddressSearchResultFields(),
-                                            patient.getPatientId());
-            patients.add(patientResponse);
-        }
-        return patients;
+    public List<PatientResponse> searchSimilarPatients(PatientSearchParameters searchParameters) {
+        return patientDao.getSimilarPatientsUsingLuceneSearch(searchParameters.getIdentifier(),
+                searchParameters.getName(),
+                searchParameters.getGender(),
+                searchParameters.getCustomAttribute(),
+                searchParameters.getAddressFieldName(),
+                searchParameters.getAddressFieldValue(),
+                searchParameters.getLength(),
+                searchParameters.getStart(),
+                searchParameters.getPatientAttributes(),
+                searchParameters.getProgramAttributeFieldValue(),
+                searchParameters.getProgramAttributeFieldName(),
+                searchParameters.getAddressSearchResultFields(),
+                searchParameters.getPatientSearchResultFields(),
+                searchParameters.getLoginLocationUuid(),
+                searchParameters.getFilterPatientsByLocation(), searchParameters.getFilterOnAllIdentifiers());
     }
 
     @Override

@@ -81,8 +81,7 @@ public class BahmniPatientSearchController extends BaseRestController {
         RequestContext requestContext = RestUtil.getRequestContext(request, response);
         PatientSearchParameters searchParameters = new PatientSearchParameters(requestContext);
         try {
-            PatientResponseMapper patientResponseMapper = new PatientResponseMapper(Context.getVisitService(),new BahmniVisitLocationServiceImpl(Context.getLocationService()));
-            List<PatientResponse> patients = bahmniPatientService.searchSimilarPatients(searchParameters, patientResponseMapper);
+            List<PatientResponse> patients = bahmniPatientService.searchSimilarPatients(searchParameters);
             AlreadyPaged alreadyPaged = new AlreadyPaged(requestContext, patients, false);
             return new ResponseEntity(alreadyPaged, HttpStatus.OK);
         }catch (IllegalArgumentException e){
