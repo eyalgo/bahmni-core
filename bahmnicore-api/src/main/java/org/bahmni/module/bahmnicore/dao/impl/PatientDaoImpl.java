@@ -33,8 +33,15 @@ import org.openmrs.module.bahmniemrapi.visitlocation.BahmniVisitLocationServiceI
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 @Repository
@@ -93,7 +100,6 @@ public class PatientDaoImpl implements PatientDao {
         return patientResponses;
     }
 
-    // TODO BAH-460 create a class for the search fields
     @Override
     public List<PatientResponse> getSimilarPatientsUsingLuceneSearch(String name, String gender, String loginLocationUuid, Integer length) {
         PatientResponseMapper patientResponseMapper = new PatientResponseMapper(Context.getVisitService(),new BahmniVisitLocationServiceImpl(Context.getLocationService()));
@@ -122,16 +128,16 @@ public class PatientDaoImpl implements PatientDao {
     }
 
     private List<Patient> getPatientsByNameAndGender(String name, String gender, Integer length) {
+        if(isNullOrEmpty(name, gender)) {
+            return new ArrayList<>();
+        }
+
         HibernatePatientDAO patientDAO = new HibernatePatientDAO();
         patientDAO.setSessionFactory(sessionFactory);
         List<Patient> patients = new ArrayList<Patient>();
         String query = LuceneQuery.escapeQuery(name);
         PersonLuceneQuery personLuceneQuery = new PersonLuceneQuery(sessionFactory);
         LuceneQuery<PersonName> nameQuery = personLuceneQuery.getPatientNameQueryWithOrParser(query, false);
-        /* person.gender does not work somehow in LuceneQuery, so the dirty way is to filter result with person's gender */
-        // if(gender != null && !gender.isEmpty()){
-        //     nameQuery.include("person.gender", gender);
-        // }
         List<PersonName> persons = nameQuery.list().stream()
                                     .filter(
                                         personName ->
@@ -141,6 +147,10 @@ public class PatientDaoImpl implements PatientDao {
         persons = persons.subList(0, Math.min(length, persons.size()));
         persons.forEach(person -> patients.add(new Patient(person.getPerson())));
         return patients;
+    }
+
+    private Boolean isNullOrEmpty(String name, String gender) {
+        return (name == null || name.trim().isEmpty()) && (gender == null || gender.isEmpty());
     }
 
 
@@ -231,7 +241,7 @@ public class PatientDaoImpl implements PatientDao {
                 "LOWER (TABLE_NAME) ='person_address' and LOWER(COLUMN_NAME) IN " +
                 "( :personAddressField)";
         Query queryToGetAddressFields = sessionFactory.getCurrentSession().createSQLQuery(query);
-        queryToGetAddressFields.setParameterList("personAddressField", Arrays.asList(addressFieldName.toLowerCase()));
+        queryToGetAddressFields.setParameterList("personAddressField", asList(addressFieldName.toLowerCase()));
         List list = queryToGetAddressFields.list();
         return list.size() > 0;
     }
@@ -253,7 +263,7 @@ public class PatientDaoImpl implements PatientDao {
         String query = "select person_attribute_type_id from person_attribute_type where name in " +
                 "( :personAttributeTypeNames)";
         Query queryToGetAttributeIds = sessionFactory.getCurrentSession().createSQLQuery(query);
-        queryToGetAttributeIds.setParameterList("personAttributeTypeNames", Arrays.asList(patientAttributes));
+        queryToGetAttributeIds.setParameterList("personAttributeTypeNames", asList(patientAttributes));
         List list = queryToGetAttributeIds.list();
         return (List<Integer>) list;
     }
@@ -281,7 +291,7 @@ public class PatientDaoImpl implements PatientDao {
         }
 
         Patient patient = getPatient(patientIdentifier);
-        List<Patient> result = (patient == null ? new ArrayList<Patient>() : Arrays.asList(patient));
+        List<Patient> result = (patient == null ? new ArrayList<Patient>() : asList(patient));
         return result;
     }
 

@@ -215,10 +215,10 @@ public class BahmniPatientDaoImplLuceneIT extends BaseIntegrationTest {
     @Test
     public void shouldSearchSimilarPatientByPatientName() {
         List<PatientResponse> patients = patientDao.getSimilarPatientsUsingLuceneSearch("Peet", "", "c36006e5-9fbb-4f20-866b-0ece245615a1", 5);
+        assertEquals(2, patients.size());
+
         PatientResponse patient1 = patients.get(0);
         PatientResponse patient2 = patients.get(1);
-
-        assertEquals(2, patients.size());
         assertEquals(patient1.getGivenName(), "Horatio");
         assertEquals(patient1.getMiddleName(), "Peeter");
         assertEquals(patient1.getFamilyName(), "Sinha");
@@ -249,6 +249,17 @@ public class BahmniPatientDaoImplLuceneIT extends BaseIntegrationTest {
         assertEquals(patient1.getFamilyName(), "Sinha");
     }
 
-    //TODO missing tests: by limit, parameters verification
+    @Test
+    public void shouldReturnEmptyListIfAllSearchTermsAreEmpty() {
+        List<PatientResponse> patients = patientDao.getSimilarPatientsUsingLuceneSearch("", "", "c36006e5-9fbb-4f20-866b-0ece245615a1", 5);
 
+        assertEquals(0, patients.size());
+    }
+
+    @Test
+    public void shouldReturnResultsIfOneFieldIsSet() {
+        List<PatientResponse> patients = patientDao.getSimilarPatientsUsingLuceneSearch("", "F", "c36006e5-9fbb-4f20-866b-0ece245615a1", 5);
+
+        assertEquals(5, patients.size());
+    }
 }

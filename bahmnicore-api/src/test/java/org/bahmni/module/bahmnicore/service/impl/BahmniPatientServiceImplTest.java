@@ -18,7 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BahmniPatientServiceImplTest {
@@ -72,20 +75,15 @@ public class BahmniPatientServiceImplTest {
         verify(patientDao).getPatients("partial_identifier", shouldMatchExactPatientId);
     }
 
-    // TODO BAH-460 Add test that verifies call to PatioenDaoImpl for searching similar patients
-
-
     @Test
-    public void shouldCallgetSimilarPatientsUsingLuceneSearch() {
+    public void shouldCallGetSimilarPatientsUsingLuceneSearch() {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(requestContext.getRequest()).thenReturn(request);
         when(request.getParameterMap()).thenReturn(new HashMap<>());
-
         PatientSearchParameters patientSearchParameters = new PatientSearchParameters(requestContext);
         patientSearchParameters.setName("John");
         patientSearchParameters.setGender("M");
         patientSearchParameters.setLoginLocationUuid("someUUid");
-
 
         bahmniPatientService.searchSimilarPatients(patientSearchParameters);
         verify(patientDao).getSimilarPatientsUsingLuceneSearch("John", "M", "someUUid", 5);
