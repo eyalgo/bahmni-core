@@ -128,18 +128,15 @@ public class PatientDaoImpl implements PatientDao {
 
         HibernatePatientDAO patientDAO = new HibernatePatientDAO();
         patientDAO.setSessionFactory(sessionFactory);
-        List<Patient> patients = new ArrayList<Patient>();
         String query = LuceneQuery.escapeQuery(name);
         PersonLuceneQuery personLuceneQuery = new PersonLuceneQuery(sessionFactory);
         LuceneQuery<PersonName> nameQuery = personLuceneQuery.getPatientNameQueryWithOrParser(query, false);
-        List<PersonName> persons = nameQuery.list().stream()
-                                    .filter(
-                                        personName ->
-                                            personName.getPreferred()
-                                            && checkGender(personName.getPerson(), gender)
-                                    ).collect(toList());
-        persons = persons.subList(0, Math.min(length, persons.size()));
-        persons.forEach(person -> patients.add(new Patient(person.getPerson())));
+        List<Patient> patients = nameQuery.list().stream()
+                .filter(personName ->
+                        personName.getPreferred() && checkGender(personName.getPerson(), gender))
+                .limit(length)
+                .map(personName -> new Patient(personName.getPerson()))
+                .collect(toList());
         return patients;
     }
 
