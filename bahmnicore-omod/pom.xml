@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.bahmni.module</groupId>
         <artifactId>bahmni</artifactId>
-        <version>0.91-SNAPSHOT</version>
+        <version>0.92-SNAPSHOT</version>
     </parent>
     <artifactId>bahmnicore-omod</artifactId>
     <packaging>jar</packaging>
@@ -19,7 +19,7 @@
         <gem.home>${basedir}/.rubygems</gem.home>
         <gem.path>${basedir}/.rubygems</gem.path>
         <uiframeworkVersion>3.3.1</uiframeworkVersion>
-        <bedManagementVersion>5.6-SNAPSHOT</bedManagementVersion>
+        <bedManagementVersion>5.7.0</bedManagementVersion>
     </properties>
 
     <dependencies>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.bahmni.module</groupId>
             <artifactId>mail-appender</artifactId>
-            <version>0.91-SNAPSHOT</version>
+            <version>0.92-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>org.bahmni.module</groupId>
             <artifactId>common</artifactId>
-            <version>0.91-SNAPSHOT</version>
+            <version>0.92-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.bahmni.module</groupId>
@@ -236,7 +236,7 @@
         <dependency>
             <groupId>org.bahmni.test</groupId>
             <artifactId>bahmni-test-commons</artifactId>
-            <version>0.91-SNAPSHOT</version>
+            <version>0.92-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -286,13 +286,13 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>rulesengine-api</artifactId>
-            <version>0.91-SNAPSHOT</version>
+            <version>0.92-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>rulesengine-api</artifactId>
-            <version>0.91-SNAPSHOT</version>
+            <version>0.92-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
